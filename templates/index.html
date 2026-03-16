@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Application fluviale
+        </title>
+    </head>
+    <body>
+        <h1>
+            Application de report modal
+        </h1>
+
+        <form action="/calculer" method="post">
+            <!-- Champs de saisi libre-->
+             <label>Volume transporté (tonnes)</label>
+             <input type="number" name="volume_transporte">
+
+             <label>Volume embarcation (tonnes)</label>
+             <input type="number" name="volume_embarcation">
+
+             <label>Distance fluviale (km)</label>
+             <input type="number" name="distance_fluviale">
+
+             <label>Distance routière (km)</label>
+             <input type="number" name="distance_routiere">
+
+             <!-- Listes déroulante -->
+              <label>Type d'embarcation</label>
+              <select name="type_embarcation">
+                <option>Automoteur</option>
+                <option>Pousseur</option>
+              </select>
+
+              <label>Voie d'eau</label>
+              <select name="voie_deau" id="voie_deau" onchange="afficherGarabit()">
+                <option>Seine</option>
+                <option>Petite Seine/Oise</option>
+                <option>Rhone_Saone</option>
+                <option>Rhin</option>
+                <option>Moselle</option>
+                <option>Canal</option>
+              </select>
+
+              <!-- Gabarit des canaux, caché par défaut -->
+               <div id="gabarit_div" style="display: none">
+                <label>Gabarit du Canal</label>
+                <select name="gabarit">
+                    <option>Petit gabarit</option>
+                    <option>Moyen gabarit</option>
+                    <option>Grand gabarit</option>
+                </select>
+               </div>
+               
+               <!--Affichage conditionnel-->
+               <script>
+                function afficherGarabit(){
+                    // récupère la valeur afficher dans la voie d'eau
+                    var voie = document.getElementById("voie_deau").value ;
+                    // recupère le bloc gabarit
+                    var gabaritDiv = document.getElementById("gabarit_div");
+                    // Affiche ou cache en fonction de la valeur de voie d'eau
+                    if (voie === "Canal"){
+                        gabaritDiv.style.display = "block";
+                    }
+                    else{
+                        gabaritDiv.style.display = "none";
+                    }
+                }
+               </script>
+
+              <label>Sens de circulation</label>
+              <select name="sens_circulation">
+                <option>Montant</option>
+                <option>Avalant</option>
+                <option>Mixte</option>
+              </select>
+
+              <!-- Bouton de calcul -->
+               <button type="submit">Calculer</button>
+        </form>
+    </body>
+</html>
