@@ -1,82 +1,223 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>
-            Application fluviale
-        </title>
-    </head>
-    <body>
-        <h1>
-            Application de report modal
-        </h1>
+<head>
+    <title>Application Fluviale</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: #333;
+        }
+        h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+        h2 { font-size: 18px; font-weight: 500; margin: 1.5rem 0 1rem; }
+        h3 { font-size: 15px; font-weight: 500; color: #666; margin: 1rem 0 0.5rem; }
+        label { display: block; font-size: 13px; color: #666; margin-bottom: 4px; }
+        input, select {
+            width: 100%;
+            height: 36px;
+            border: 0.5px solid #ccc;
+            border-radius: 8px;
+            padding: 0 10px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            height: 36px;
+            background: #1D9E75;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        hr { border: none; border-top: 0.5px solid #ddd; margin: 2rem 0; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .metric {
+            background: #f5f5f3;
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+        .metric-label { font-size: 12px; color: #888; margin: 0 0 4px; }
+        .metric-value { font-size: 22px; font-weight: 500; margin: 0; }
+        .metric-unit { font-size: 12px; color: #888; }
+        .bar-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .bar-label { font-size: 12px; color: #666; width: 60px; flex-shrink: 0; }
+        .bar-track { flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+        .bar-fill-teal { height: 100%; background: #1D9E75; border-radius: 4px; }
+        .bar-fill-amber { height: 100%; background: #BA7517; border-radius: 4px; }
+        .bar-value { font-size: 11px; color: #888; width: 40px; text-align: right; }
+        .message-comparaison {
+            background: #E1F5EE;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #0F6E56;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
 
-        <form action="/calculer" method="post">
-            <!-- Champs de saisi libre-->
-             <label>Volume transporté (tonnes)</label>
-             <input type="number" name="volume_transporte">
+    <h1>Application de report modal</h1>
+    <p style="font-size: 13px; color: #888; margin-top: 0;">Comparaison transport fluvial / routier</p>
 
-             <label>Volume embarcation (tonnes)</label>
-             <input type="number" name="volume_embarcation">
+    <form action="/calculer" method="post">
 
-             <label>Distance fluviale (km)</label>
-             <input type="number" name="distance_fluviale">
+        <h2>Paramètres</h2>
 
-             <label>Distance routière (km)</label>
-             <input type="number" name="distance_routiere">
+        <label>Volume transporté (tonnes)</label>
+        <input type="number" name="volume_transporte">
 
-             <!-- Listes déroulante -->
-              <label>Type d'embarcation</label>
-              <select name="type_embarcation">
-                <option>Automoteur</option>
-                <option>Pousseur</option>
-              </select>
+        <label>Volume embarcation (tonnes)</label>
+        <input type="number" name="volume_embarcation">
 
-              <label>Voie d'eau</label>
-              <select name="voie_deau" id="voie_deau" onchange="afficherGarabit()">
-                <option>Seine</option>
-                <option>Petite Seine/Oise</option>
-                <option>Rhone_Saone</option>
-                <option>Rhin</option>
-                <option>Moselle</option>
-                <option>Canal</option>
-              </select>
+        <label>Distance fluviale (km)</label>
+        <input type="number" name="distance_fluviale">
 
-              <!-- Gabarit des canaux, caché par défaut -->
-               <div id="gabarit_div" style="display: none">
-                <label>Gabarit du Canal</label>
-                <select name="gabarit">
-                    <option>Petit gabarit</option>
-                    <option>Moyen gabarit</option>
-                    <option>Grand gabarit</option>
-                </select>
-               </div>
-               
-               <!--Affichage conditionnel-->
-               <script>
-                function afficherGarabit(){
-                    // récupère la valeur afficher dans la voie d'eau
-                    var voie = document.getElementById("voie_deau").value ;
-                    // recupère le bloc gabarit
-                    var gabaritDiv = document.getElementById("gabarit_div");
-                    // Affiche ou cache en fonction de la valeur de voie d'eau
-                    if (voie === "Canal"){
-                        gabaritDiv.style.display = "block";
-                    }
-                    else{
-                        gabaritDiv.style.display = "none";
-                    }
-                }
-               </script>
+        <label>Distance routière (km)</label>
+        <input type="number" name="distance_routiere">
 
-              <label>Sens de circulation</label>
-              <select name="sens_circulation">
-                <option>Montant</option>
-                <option>Avalant</option>
-                <option>Mixte</option>
-              </select>
+        <label>Type d'embarcation</label>
+        <select name="type_embarcation">
+            <option>Automoteur</option>
+            <option>Pousseur</option>
+        </select>
 
-              <!-- Bouton de calcul -->
-               <button type="submit">Calculer</button>
-        </form>
-    </body>
+        <label>Voie d'eau</label>
+        <select name="voie_deau" id="voie_deau" onchange="afficherGabarit()">
+            <option>Seine</option>
+            <option>PetiteSeine_Oise</option>
+            <option>Rhone_Saone</option>
+            <option>Rhin</option>
+            <option>Moselle</option>
+            <option>Canal</option>
+        </select>
+
+        <div id="gabarit_div" style="display:none">
+            <label>Gabarit du canal</label>
+            <select name="gabarit">
+                <option>Petit gabarit</option>
+                <option>Moyen gabarit</option>
+                <option>Grand gabarit</option>
+            </select>
+        </div>
+
+        <label>Sens de circulation</label>
+        <select name="sens_circulation">
+            <option>Montant</option>
+            <option>Avalant</option>
+            <option>Mixte</option>
+        </select>
+
+        <button type="submit">Calculer</button>
+
+    </form>
+
+    {% if resultats %}
+    <hr>
+    <h2>Résultats</h2>
+    <h3>Paramètres saisis</h3>
+<div class="grid-2">
+    <div class="metric">
+        <p class="metric-label">Volume transporté</p>
+        <p class="metric-value">{{ volume_transporte }} <span class="metric-unit">t</span></p>
+    </div>
+    <div class="metric">
+        <p class="metric-label">Volume embarcation</p>
+        <p class="metric-value">{{ volume_embarcation }} <span class="metric-unit">t</span></p>
+    </div>
+    <div class="metric">
+        <p class="metric-label">Distance fluviale</p>
+        <p class="metric-value">{{ distance_fluviale }} <span class="metric-unit">km</span></p>
+    </div>
+    <div class="metric">
+        <p class="metric-label">Distance routière</p>
+        <p class="metric-value">{{ distance_routiere }} <span class="metric-unit">km</span></p>
+    </div>
+</div>
+<div class="grid-3">
+    <div class="metric">
+        <p class="metric-label">Type d'embarcation</p>
+        <p class="metric-value" style="font-size: 16px;">{{ type_embarcation }}</p>
+    </div>
+    <div class="metric">
+        <p class="metric-label">Voie d'eau</p>
+        <p class="metric-value" style="font-size: 16px;">{{ voie_deau }}</p>
+    </div>
+    <div class="metric">
+        <p class="metric-label">Sens de circulation</p>
+        <p class="metric-value" style="font-size: 16px;">{{ sens_circulation }}</p>
+    </div>
+</div>
+
+
+
+    <h3>Transport fluvial</h3>
+    <div class="grid-3">
+        <div class="metric">
+            <p class="metric-label">Tonne.km</p>
+            <p class="metric-value">{{ tonne_km_fluvial }} <span class="metric-unit">t.km</span></p>
+        </div>
+        <div class="metric">
+            <p class="metric-label">Émissions CO2</p>
+            <p class="metric-value">{{ emissions_co2_fluvial }} <span class="metric-unit">t</span></p>
+        </div>
+        <div class="metric">
+            <p class="metric-label">Émissions GES</p>
+            <p class="metric-value">{{ emissions_ges_fluvial }} <span class="metric-unit">t</span></p>
+        </div>
+    </div>
+
+    <h3>Transport routier</h3>
+    <div class="grid-2">
+        <div class="metric">
+            <p class="metric-label">Tonne.km</p>
+            <p class="metric-value">{{ tonne_km_routier }} <span class="metric-unit">t.km</span></p>
+        </div>
+        <div class="metric">
+            <p class="metric-label">Émissions GES</p>
+            <p class="metric-value">{{ emissions_ges_routier }} <span class="metric-unit">t</span></p>
+        </div>
+    </div>
+
+    <h3>Comparaison</h3>
+    <div class="bar-wrap">
+        <span class="bar-label">Fluvial</span>
+        <div class="bar-track">
+            <div class="bar-fill-teal" style="width: {{ (emissions_ges_fluvial / emissions_ges_routier * 100)|round }}%"></div>
+        </div>
+        <span class="bar-value">{{ emissions_ges_fluvial }} t</span>
+    </div>
+    <div class="bar-wrap">
+        <span class="bar-label">Routier</span>
+        <div class="bar-track">
+            <div class="bar-fill-amber" style="width: 100%"></div>
+        </div>
+        <span class="bar-value">{{ emissions_ges_routier }} t</span>
+    </div>
+
+    <div class="message-comparaison">{{ message_comparaison }}</div>
+
+    {% endif %}
+
+    <script>
+        function afficherGabarit() {
+            var voie = document.getElementById("voie_deau").value;
+            var gabaritDiv = document.getElementById("gabarit_div");
+            if (voie === "Canal") {
+                gabaritDiv.style.display = "block";
+            } else {
+                gabaritDiv.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
 </html>
